@@ -23,6 +23,8 @@ Simply run the console application. It will begin monitoring and logging the spe
 
 This project is currently in a Work in Progress (WIP) state. There are plans for further development and improvements.
 
+Currently it logs processes that are named "msedge", "slack", "Teams", "Code - Insiders" or "devenv" and polling is also hardcoded to 5 seconds.
+
 ## Contributions
 
 Contributions are welcome. Please feel free to submit a pull request or open an issue.
