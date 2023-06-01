@@ -6,14 +6,14 @@ This project is a console application that logs the usage time of specified appl
 
 - Monitors and logs the usage time of specified applications.
 - Logs are generated in JSON format and saved to a file.
-- The console application runs in a loop, updating the log file every 60 seconds.
+- The console application runs in a loop, updating the log file every 5 seconds.
 - The log file includes the name of the application, the window title, the start time, and the total time the application was active.
 
 ## How it Works
 
 The application uses the Process.GetProcesses method to retrieve information about the currently active processes. It then filters this information based on a list of specified keywords, which represent the names of the applications that should be logged.
 
-The application logs the usage time of each matching process, as well as its window title and start time. This information is then written to a JSON file, which is updated every 60 seconds.
+The application logs the usage time of each matching process, as well as its window title and start time. This information is then written to a JSON file, which is updated every 5 seconds.
 
 ## Usage
 
