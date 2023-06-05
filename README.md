@@ -19,11 +19,13 @@ The application logs the usage time of each matching process, as well as its win
 
 Simply run the console application. It will begin monitoring and logging the specified applications immediately.
 
+Config.json has keywords for filtered processes and sleepDuration for polling time.
+
 ## Project Status
 
 This project is currently in a Work in Progress (WIP) state. There are plans for further development and improvements.
 
-Currently it logs processes that are named "msedge", "slack", "Teams", "Code - Insiders" or "devenv" and polling is also hardcoded to 5 seconds.
+Currently it logs processes that are named "msedge", "slack", "Teams", "Code - Insiders" or "devenv" and polling is set to 5 seconds.
 
 ## Contributions
 
