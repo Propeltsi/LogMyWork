@@ -5,9 +5,23 @@ using System.Text.Json;
 
 class Program
 {
+    private static List<string> keywords;
+    private static int sleepDuration;
+
     static void Main()
     {
-        var keywords = new List<string> { "msedge", "slack", "Teams", "Code - Insiders", "devenv" };
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            WriteIndented = true,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Allow non-ASCII characters
+        };
+
+        var configJson = File.ReadAllText("config.json");
+        var config = JsonSerializer.Deserialize<Config>(configJson, options);
+
+        keywords = config.Keywords;
+        sleepDuration = config.SleepDuration;
 
         var applicationInfos = new List<ApplicationInfo>();
 
@@ -32,13 +46,13 @@ class Program
                         Console.WriteLine($"Added new application: {existingApp.Name}");
                     }
 
-                    var existingProcess = existingApp.ProcessInfos.FirstOrDefault(p => p.Title == process.MainWindowTitle);
+                    var existingProcess = existingApp.ProcessInfos.FirstOrDefault(p => p.Title == process.MainWindowTitle.Replace("\t", "").Trim());
                     if (existingProcess == null)
                     {
                         var info = new ProcessInfo
                         {
                             Time = $"00:00:00",
-                            Title = process.MainWindowTitle,
+                            Title = process.MainWindowTitle.Replace("\t", "").Trim(),
                             StartTime = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")
                         };
 
@@ -48,19 +62,13 @@ class Program
                     else
                     {
                         var time = TimeSpan.Parse(existingProcess.Time);
-                        time = time.Add(TimeSpan.FromSeconds(5));
+                        time = time.Add(TimeSpan.FromMilliseconds(sleepDuration));
                         existingProcess.Time = $"{time.Hours:D2}:{time.Minutes:D2}:{time.Seconds:D2}";
 
                         Console.WriteLine($"Updated process: {existingProcess.Title}, New time: {existingProcess.Time}");
                     }
                 }
             }
-
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Allow non-ASCII characters
-            };
 
             var json = JsonSerializer.Serialize(applicationInfos, options);
             var filename = $"{DateTime.Now:dd-MM-yyyy}_processes.json";
@@ -70,7 +78,7 @@ class Program
 
             Console.WriteLine($"JSON file updated: {filename}\n");
 
-            Thread.Sleep(5000); // Wait for 5 seconds
+            Thread.Sleep(sleepDuration); // Wait for specified duration
         }
     }
 }
@@ -86,4 +94,10 @@ public class ApplicationInfo
 {
     public string Name { get; set; }
     public List<ProcessInfo> ProcessInfos { get; set; }
+}
+
+public class Config
+{
+    public List<string> Keywords { get; set; }
+    public int SleepDuration { get; set; }
 }
